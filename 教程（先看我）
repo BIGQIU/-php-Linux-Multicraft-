@@ -1,0 +1,307 @@
+# -php-Linux-Multicraft-
+我的世界php安装,我的世界Linux搭建网页后台Multicraft下载与安装
+64位：http://www.multicraft.org/download?arch=linux64
+
+32位：http://www.multicraft.org/download?arch=linux32
+
+输入命令
+
+wget http://www.multicraft.org/download?arch=linux64 -O multicraft.tar.gz
+![image](https://user-images.githubusercontent.com/25877379/221339546-406b7349-8cd1-4da8-aceb-c0e45d2d26bb.png)
+接着下载中文语言包，输入命令
+
+wget http://www.multicraft.org/files/translation/multicraft-translation-zh.zip
+
+复制代码
+
+b649ece53f947a1e5becab6e41b1e979.png
+
+安装
+
+解压Multicraft压缩包，输入命令
+
+tar xvzf multicraft.tar.gz
+
+复制代码
+
+进入解压出来的目录，启动安装向导
+
+cd multicraft
+
+./setup.sh
+
+复制代码
+
+7466b51ca22c3027a7617a5ecec1eb9b.png
+
+905dfee016c5d88b9bdb5861b848c89d.png
+
+Run each Minecraft server under its own user? (Multicraft will create system users)
+
+在每个Minecraft服务器自己的用户下运行服务器吗(Multicraft会创建系统用户)？这里输入n，如果你是服务器供应商，有很多服务器运行，出于安全考虑，请输入y。
+
+Run Multicraft under this user
+
+在这个用户下运行Multicraft，默认是minecraft，回车即可。出于安全考虑，请不要使用root用户运行Multicraft！
+
+User not found. Create user 'minecraft' on start of installation?
+
+用户没找到。在安装开始时创建用户“minecraft“吗？回车即可。
+
+Install Multicraft in
+
+安装Multicraft到哪里？默认是用户minecraft主目录下的multicraft文件夹，回车即可。
+
+If you have a license key you can enter it now
+
+如果你有一个密钥可以现在输入，默认没有，回车即可。
+
+If you control multiple machines from one control panel you need to assign each daemona unique ID (requires a Dynamic or custom license). Daemon ID?
+
+如果你从一个控制面板控制多个机器你需要分配每个服务端程序一个唯一的ID(需要一个动态或自定义密钥)。服务端程序ID？这是给服务器供应商用的，在多台机器的时候使用，我们一般用不到，默认ID是1，回车即可。
+
+Will the PHP frontend run on this machine?
+
+PHP在这个机器上前端运行吗？我们已经安装了PHP了，默认是是，回车即可。
+
+User of the webserver
+
+网页服务器的用户。默认是www-data，回车即可。
+
+Location ofthe PHP frontend
+
+这个其实是问安装网页的目录，默认是/var/www/multicraft，回车即可。
+
+Enable builtin FTP server?
+
+启用内建FTP服务器吗？默认是是，回车即可。
+
+IP the FTP server will listen on (empty for same as daemon)
+
+FTP服务器将监听的IP(留空设置和服务端程序一样)这个一般默认是自动识别了的，请看情况自行修改，回车即可。
+
+FTP server port
+
+FTP服务器端口。默认是21，回车即可。
+
+Block FTP upload of .jar files and other executables (potentially dangerous plugins)?
+
+禁止FTP上传.jar文件和其他可执行文件(潜在危险插件)？这个禁用了就不能上传插件了，输入n回车即可。
+
+What kind of database do you want to use?
+
+你想使用哪种数据库？我们安装了mysql，输入mysql回车即可。
+
+Database host
+
+数据库主机。默认是本地，回车即可。
+
+Database name
+
+数据库名称。默认回车即可，我们会在后面创建。
+
+Database user
+
+数据库用户。输入数据库用户名回车即可。
+
+Database password
+
+数据库密码。输入密码回车即可。
+
+Ready to install Multicraft. Start installation?
+
+准备好安装Multicraft了。开始安装？回车即可。
+
+然后会显示一个说明，回车即可，我们会在后面进行。
+
+Save entered settings?
+
+保存输入的设置吗？默认是是，回车即可。
+
+ba0783031bdf81f9916c7d7c5bf08a12.png
+
+接下来安装中文语言包
+
+解压语言包，输入命令
+
+unzip multicraft-translation-zh.zip
+
+复制代码
+
+把语言包复制过去，输入命令
+
+cp -r protected /var/www/multicraft
+
+复制代码
+
+设置语言包的权限和拥有者，输入命令
+
+chmod 0755 /var/www/multicraft/protected/messages/zh
+
+chown -R www-data.www-data /var/www/multicraft/protected/messages/zh
+
+复制代码
+
+删除解压出来的语言包，输入命令
+
+rm -rf protected
+
+复制代码
+
+ae4d557951ae4e3ee2478019a3bf8c63.png
+
+接下来用浏览器打开http://域名或IP/multicraft
+
+点击”Start Installation“开始安装
+
+c60409de21c2f2a02de14c2657c58338.png
+
+会看到保护目录未进行安全设置
+
+937db16ccdc87e0f70980315e3a40d97.png
+
+先修改Apache的配置文件，其他系统的修改方法请自行搜索，把现在的配置文件先备份一份，输入命令
+
+cp /etc/apache2/sites-available/default /etc/apache2/sites-available/default.bak
+
+复制代码
+
+打开配置文件，输入命令
+
+nano /etc/apache2/sites-available/default
+
+复制代码
+
+用方向键移动光标到这几行
+
+Options Indexes FollowSymLinks MultiViews
+
+AllowOverride None
+
+Order allow,deny
+
+allow from all
+
+复制代码
+
+在Indexes前加一个“-”，这是出于安全考虑，否则任何人能够在浏览器里看到网站目录下的文件。然后把AllowOverride None改为AllowOverride All
+
+修改后的文件看起来是这样的
+
+Options -Indexes FollowSymLinks MultiViews
+
+AllowOverride All
+
+Order allow,deny
+
+allow from all
+
+复制代码
+
+173877a72ec527f6534406fda82d48e4.png
+
+保存退出后重启Apache服务，输入命令
+
+service apache2 restart
+
+复制代码
+
+e4ca93b22fa171f616471dcc629e25af.png
+
+再去刷新网页，全部通过了，点击”Continue“继续。
+
+07a7d6adceac5110435790581ba24b5e.png
+
+这是复制配置文件的，显示绿框可直接点击”Continue“继续。
+
+a4224d5813ab057efd2939b5ee444e29.png
+
+现在为Multicraft配置数据库
+
+输入命令
+
+mysql -uroot -p
+
+复制代码
+
+然后输入MySQL的root用户密码并回车，进入数据库。
+
+然后为Multicraft创建数据库，输入以下命令
+
+create database multicraft_panel;
+
+create database multicraft_daemon;
+
+exit;
+
+复制代码
+
+ff3c106973b7f04dfd0f3279512159a2.png
+
+再回到浏览器这边，Database Type选择”MySQL“，Database Host输入MySQL数据库的地址，默认是本地，即127.0.0.1，Database Name输入multicraft_panel，Database Username和Database Password输入MySQL的用户名和密码，然后点击”Save and Test“。看到黄框内最后一行文字变为Database seems to be uninitialized，即可点击”Initialize Database“
+
+72493ebec7c5f7727ad1a6ddaee63fb5.png
+
+变成绿框后即可点击”Continue“，然后又变成黄框，黄框内最后一行文字变为Connection successful，即可点击上方的”Login“
+
+6052a4bfc5042a1b2078fa2053c080f3.png
+
+18ca28049e962c03b09be7b31fdf9166.png
+
+用户名和密码都是admin，输入后点击”Login“
+
+24d5855d230d4f0e8dba5cfad60f779d.png
+
+登录后会看到上方显示”Logout“，中间显示绿框，即可点击”Continue“
+
+0555af8638642a5a2dd7a10ff378d580.png
+
+同样的，Database Type选择MySQL，其他选项和上一步一样，但是Database Name输入multicraft_daemon
+
+920b9f2ac237e9b8b5c0cbbf694abfa6.png
+
+点击”Continue“后来到这个页面，在Language选择”简体中文“，然后点击”Save“
+
+6bfade7ad4a69c5c518093e81df2129c.png
+
+然后启动Multicraft程序，输入命令
+
+/home/minecraft/multicraft/bin/multicraft -v start
+
+复制代码
+
+ae8510fd481e572233daa91143c55422.png
+
+回去浏览器那边可以看到有绿框出现，点击”Refresh“
+
+然后网页会刷新一次，”Refresh“按钮会变成”Continue“
+
+b2db987a1e3d092a66cfd80bfb34e015.png
+
+点击后跳转到这个网页，点击”Continue to Multicraft“
+
+01212d6737d9361f4d882250a7b3ed59.png
+
+然后去删除安装网页，输入命令
+
+rm /var/www/multicraft/install.php
+
+复制代码
+
+ffe1679761be37eb09362ac814d186cb.png
+
+接下来设置Multicraft开机自启动，其他系统的修改方法请自行搜索，输入命令
+
+nano /etc/rc.local
+
+复制代码
+
+ab744460255fc6b9ad3d8d080c74ff07.png
+
+在exit 0前新开一行写入以下内容并保存退出
+
+/home/minecraft/multicraft/bin/multicraft -v start
+
+复制代码
+
+0d9107ac98c0de1e4b6bdaf651241a4e.png
